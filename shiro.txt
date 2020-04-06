@@ -1,0 +1,140 @@
+关于c++数据结构的单链表插入及按位查找
+
+#include<iostream>
+using namespace std;
+template<class T>
+struct Node
+{
+T data;
+Node<T> *next;
+};
+template<class T>
+class Student{
+public:
+Student();
+Student(T a[],int n);
+~Student();
+int Length();
+T Get(int i);
+int locate(T x);
+void Insert(int i,T x);
+T Delete(int i);
+void foreach();
+private:
+Node<T> *first;
+int length;
+};
+//无参构造函数
+template<class T>
+Student<T>::Student(){
+first=new Node<T>;
+first->next=NULL;
+}
+//尾插法建表
+template<class T>
+Student<T>::Student(T a[],int n){
+first=new Node<T>;
+Node<T> *s,*r;
+r=first;
+for(int i=0;i<n;i++){
+s=new Node<T>;s->data=a[i];
+r->next=s;
+r=s;
+}
+r->next=NULL;
+}
+//析构函数
+template<class T>
+Student<T>::~Student(){
+Node<T>*q=NULL;
+while(first!=NULL){
+q=first;
+first=first->next;
+delete q;
+}
+}
+//按位查找
+template<class T>
+T Student<T>::Get(int i){
+Node<T>*p=NULL;
+p=first->next;
+int l=0;
+while(p!=NULL&&l<i-1){
+p=p->next;
+i++;
+}
+if(p==NULL)throw "位置";
+else return p->data;
+}
+//按值查找
+template<class T>
+int Student<T>::locate(T x){
+Node<T> *p;
+p=first->next;
+int l=1;
+while(p!=NULL){
+if(p->data==x)return l;
+p=p->next;
+l++;
+}
+return 0;
+}
+//插入
+template<class T>
+void Student<T>::Insert(int i,T x){
+Node<T>*p=NULL;
+p=first->next;
+Node<T> *s;
+int l=1;
+while(p!=NULL&&l<i-2){
+p=p->next;
+l++;
+}
+if(p==NULL) throw "位置";
+else {
+s=new Node<T>;
+s->data=x;
+s->next=p->next;
+p->next=s;
+}
+}
+//删除
+template<class T>
+T Student<T>::Delete(int i){
+Node<T>*p,*q;
+p=first->next;
+int l=0;
+while(p!=NULL&&l<i-2){
+p=p->next;
+l++;
+}
+if(p==NULL||p->next==NULL) throw "位置";
+else {
+q=p->next;T x=q->data;
+p->next=q->next;
+delete q;
+return x;
+}
+}
+//遍历
+template<class T>
+void Student<T>::foreach(){
+Node<T>*p;
+p=first->next;
+while(p!=NULL){
+cout<<p->data<<",";
+p=p->next;
+}
+}
+void main(){
+int a[]={80,90,70,50,100};
+int num=5;
+Student<int> stu(a,num);
+stu.foreach();
+cout<<"查找90分同学所在位置"<<stu.locate(90)<<endl;
+// cout<<"查找第三个同学分数"<<stu.Get(3)<<endl;
+// cout<<"在第3个和第4个学生之间插入成绩60"<<endl;
+// stu.Insert(60,4);
+cout<<"查找60分学生位置"<<stu.locate(60)<<endl;
+cout<<"删除第三个成绩"<<stu.Delete(3)<<endl;
+}
